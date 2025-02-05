@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import Header from './Header'
 import MainTextArea from './MainTextArea'
-import InputText from './InputText'
+import InputText from './InputTextBox'
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([

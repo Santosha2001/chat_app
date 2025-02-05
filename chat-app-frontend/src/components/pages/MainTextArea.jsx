@@ -1,5 +1,5 @@
 import React from 'react'
-import InputText from './InputText'
+import InputText from './InputTextBox'
 
 const MainTextArea = ({ messages, chatBoxRef, currentUser }) => {
     return (
