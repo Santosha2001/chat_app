@@ -1,15 +1,6 @@
 import { AxiosHelper } from "../config/AxiosHelper";
 
-// export const createRoomApi = async (roomDetails) => {
-//     try {
-//         const response = await AxiosHelper.post('/api/v1/rooms', roomDetails);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error creating room', error);
-//         throw error; // Rethrow the error to handle it in the calling function
-//     }
-// };
-
+// create room
 export const createRoomApi = async (roomDetails) => {
     try {
         const response = await AxiosHelper.post('/api/v1/rooms', roomDetails);
@@ -22,6 +13,17 @@ export const createRoomApi = async (roomDetails) => {
         } else {
             console.error("Axios setup error:", error.message);
         }
+        throw error;
+    }
+};
+
+// join room
+export const joinRoomApi = async (roomId) => {
+    try {
+        const response = await AxiosHelper.get(`/api/v1/rooms/${roomId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error joining room', error);
         throw error;
     }
 };

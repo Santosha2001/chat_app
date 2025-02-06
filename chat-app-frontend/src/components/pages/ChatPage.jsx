@@ -2,8 +2,12 @@ import React, { useState, useRef } from 'react'
 import Header from './Header'
 import MainTextArea from './MainTextArea'
 import InputText from './InputTextBox'
+import { useChatContext } from '../../context/ChatContext';
 
 const ChatPage = () => {
+    const { roomId, currentUser, connected } = useChatContext();
+    console.log(roomId, currentUser, connected);
+
     const [messages, setMessages] = useState([
         { sender: 'Santosh', content: 'Hello' },
         { sender: 'Jhon', content: 'How are you?' },
@@ -15,8 +19,7 @@ const ChatPage = () => {
     ]);
     const [input, setInput] = useState('');
     const [stompClient, setStompClient] = useState(null);
-    const [roomId, setRoomId] = useState('');
-    const [currentUser, setCurrentUser] = useState('Santosh'); // Initialize current user state
+    // Initialize current user state
     const inputRef = useRef(null);
     const chatBoxRef = useRef(null);
 

@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 import chatIcon from '../assets/chat.png'
 import toast from 'react-hot-toast';
-import { createRoomApi } from '../services/RoomService';
+import { createRoomApi, joinRoomApi } from '../services/RoomService';
+import { useChatContext } from '../context/ChatContext';
+import { useNavigate } from 'react-router';
 
 const JoinOrCreateChat = () => {
     const [userDetails, setUserDetails] = useState({
         roomId: '',
         userName: ''
     });
+
+    const { roomId, userName, setRoomId, setCurrentUser, setConnected } = useChatContext();
+
+    const navigate = useNavigate();
 
     function handleInputChange(event) {
         setUserDetails({
@@ -24,26 +30,60 @@ const JoinOrCreateChat = () => {
         return true;
     }
 
-    function joinRoom() {
-        if (!validateUserDetails()) return;
-
-        console.log('Join Room', userDetails);
-    }
-
-    // async function createRoom() {
+    // async function joinRoom() {
     //     if (validateUserDetails()) {
-    //         console.log('Create Room', userDetails);
+    //         console.log('Join Room', userDetails);
     //         try {
-    //             const response = await createRoomApi(userDetails.roomId);
-    //             console.log('Room created', response);
-    //             toast.success('Room created successfully');
+    //             const response = await joinRoomApi(userDetails.roomId);
+    //             console.log('Room joined', response);
+
+    //             // Set the room id and user name in the context
+    //             setRoomId(userDetails.roomId);
+    //             setCurrentUser(userDetails.userName);
+    //             setConnected(true);
+
+    //             // Redirect to the chat page
+    //             navigate('/chat');
     //         } catch (error) {
-    //             console.error('Error creating room', error);
+    //             if (error.status == 404) {
+    //                 toast.error('Room not found');
+    //             } else {
+    //                 console.error('Error joining room', error);
+    //                 toast.error('Error joining room');
+    //             }
     //         }
     //         return;
     //     }
-
     // }
+    const joinRoom = async () => {
+        if (validateUserDetails()) {
+            console.log('Join Room', userDetails);
+            try {
+                const response = await joinRoomApi(userDetails.roomId);
+                if (response && response.roomId) {
+                    console.log('Room joined', response);
+
+                    // Set the room id and user name in the context
+                    setRoomId(userDetails.roomId);
+                    setCurrentUser(userDetails.userName);
+                    setConnected(true);
+
+                    // Redirect to the chat page
+                    navigate('/chat');
+                } else {
+                    toast.error('Room not found');
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    toast.error('Room not found');
+                } else {
+                    console.error('Error joining room', error);
+                    toast.error('Error joining room');
+                }
+            }
+        }
+    };
+
     const createRoom = async () => {
         if (validateUserDetails()) {
             console.log('Create Room', userDetails);
@@ -51,9 +91,21 @@ const JoinOrCreateChat = () => {
                 const response = await createRoomApi(userDetails);
                 console.log('Room created', response);
                 toast.success('Room created successfully');
+
+                // Set the room id and user name in the context
+                setRoomId(response.roomId);
+                setCurrentUser(userDetails.userName);
+                setConnected(true);
+
+                // Redirect to the chat page
+                navigate('/chat');
             } catch (error) {
-                console.error('Error creating room', error);
-                toast.error('Error creating room');
+                if (error.status == 400) {
+                    toast.error('Room already exists');
+                } else {
+                    console.error('Error creating room', error);
+                    toast.error('Error creating room');
+                }
             }
             return;
         }
