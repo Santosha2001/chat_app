@@ -57,8 +57,7 @@ const ChatPage = () => {
             stompClient.connect({}, () => {
                 console.log('Connected to the server');
                 setStompClient(stompClient);
-                // toast.success('Connected. You can start chatting');
-                stompClient.subscribe(`/topic/${roomId}`, (message) => {
+                stompClient.subscribe(`/topic/room/${roomId}`, (message) => {
                     console.log('Message received', message);
                     const newMessage = JSON.parse(message.body);
                     setMessages((prev) => Array.isArray(prev) ? [...prev, newMessage] : [newMessage]); // Ensure prev is an array
