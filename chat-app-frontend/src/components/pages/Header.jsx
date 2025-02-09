@@ -1,15 +1,14 @@
-import React from 'react'
-import toast from 'react-hot-toast';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
-const Header = ({ roomName, username }) => {
+const Header = ({ roomName, username, onLeaveRoom }) => {
     const navigate = useNavigate();
 
-    // function to leave the room
-    const leaveRoom = () => {
-        navigate('/');
-        toast.success('You have left the room');
-    }
+    const handleLeaveRoom = () => {
+        onLeaveRoom(); // Call the onLeaveRoom function passed as a prop
+    };
 
     return (
         <div>
@@ -26,13 +25,22 @@ const Header = ({ roomName, username }) => {
 
                 {/* button: leave room container */}
                 <div>
-                    <button onClick={leaveRoom}
-                        className='dark:bg-red-600 dark:hover:bg-red-700 rounded-full px-3 py-1'>Leave Room</button>
+                    <button
+                        className='dark:bg-red-600 dark:hover:bg-red-700 rounded-full px-3 py-1'
+                        onClick={handleLeaveRoom}
+                    >
+                        Leave Room
+                    </button>
                 </div>
-
             </header>
         </div>
     );
+};
+
+Header.propTypes = {
+    roomName: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    onLeaveRoom: PropTypes.func.isRequired,
 };
 
 export default Header;

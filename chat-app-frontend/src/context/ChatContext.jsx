@@ -1,4 +1,4 @@
-import { Children, createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const ChatContext = createContext();
 
@@ -7,12 +7,29 @@ export const ChatProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState('');
     const [connected, setConnected] = useState(false);
 
+    const login = (roomId, user) => {
+        setRoomId(roomId);
+        setCurrentUser(user);
+        setConnected(true);
+    };
+
+    const logout = () => {
+        setRoomId('');
+        setCurrentUser('');
+        setConnected(false);
+        // Clear any session or local storage data if needed
+        localStorage.removeItem('chatUser');
+    };
+
     return (
         <ChatContext.Provider value={{
             roomId, setRoomId,
             currentUser, setCurrentUser,
-            connected, setConnected
-        }}>{children}</ChatContext.Provider>
+            connected, setConnected,
+            login, logout
+        }}>
+            {children}
+        </ChatContext.Provider>
     );
 };
 

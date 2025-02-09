@@ -11,14 +11,15 @@ import toast from 'react-hot-toast';
 import { getMessagesApi } from '../../services/RoomService';
 
 const ChatPage = () => {
-    const { roomId, currentUser, connected } = useChatContext();
+    const { roomId, currentUser, connected, logout } = useChatContext();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!connected) {
             navigate('/');
+            window.history.replaceState(null, null, '/'); // Clear browser history
         }
-    }, [connected, roomId, currentUser]);
+    }, [connected, navigate]);
 
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -82,9 +83,15 @@ const ChatPage = () => {
         }
     };
 
+    const handleLeaveRoom = () => {
+        logout(); // Call the logout function from the context
+        navigate('/');
+        toast.success('You have left the room');
+    };
+
     return (
         <div>
-            <Header roomName={roomId} username={currentUser} />
+            <Header roomName={roomId} username={currentUser} onLeaveRoom={handleLeaveRoom} />
             <MainTextArea messages={messages} chatBoxRef={chatBoxRef} currentUser={currentUser} />
             <InputText input={input} setInput={setInput} sendMessage={sendMessage} />
         </div>
