@@ -28,6 +28,10 @@ const ChatPage = () => {
 
     useEffect(() => {
         const loadOldMessages = async () => {
+            if (!roomId) {
+                console.error('Room ID is missing');
+                return;
+            }
             try {
                 const response = await getMessagesApi(roomId);
                 console.log('Old messages:', response);
@@ -80,7 +84,7 @@ const ChatPage = () => {
 
     return (
         <div>
-            <Header />
+            <Header roomName={roomId} username={currentUser} />
             <MainTextArea messages={messages} chatBoxRef={chatBoxRef} currentUser={currentUser} />
             <InputText input={input} setInput={setInput} sendMessage={sendMessage} />
         </div>

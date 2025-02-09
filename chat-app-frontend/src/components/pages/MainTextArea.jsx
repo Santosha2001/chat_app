@@ -7,7 +7,7 @@ const MainTextArea = ({ messages = [], chatBoxRef, currentUser }) => {
             <main className='flex-grow overflow-auto py-20 w-2/3 dark:bg-zinc-500 mx-auto h-screen' ref={chatBoxRef}>
                 <div className='flex flex-col gap-2 p-4 h-full overflow-auto'>
                     {messages.map((message, index) => {
-                        console.log('Message timeStamp:', message.timeStamp); // Debugging line
+                        // console.log('Message timeStamp:', message.timeStamp); // Debugging line
                         return (
                             <div key={index} className={`flex ${message.sender === currentUser ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`flex items-start gap-2 p-3 rounded-lg shadow-md max-w-max ${message.sender === currentUser ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-700 text-black dark:text-gray-200'}`}>
