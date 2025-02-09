@@ -1,5 +1,7 @@
 package com.chat.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
-@AllArgsConstructor
-@NoArgsConstructor
-//@Getter
-//@Setter
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +19,31 @@ public class Message {
 
     private String sender;
     private String content;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime timeStamp;
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+    @JsonIgnore
     private Room room; // Bidirectional relationship
+
+    public Message() {
+    }
+
+    public Message(String sender, String content, Room room) {
+        this.sender = sender;
+        this.content = content;
+        this.room = room;
+    }
+
+    public Message(Long id, String sender, String content, LocalDateTime timeStamp, Room room) {
+        this.id = id;
+        this.sender = sender;
+        this.content = content;
+        this.timeStamp = timeStamp;
+        this.room = room;
+    }
 
     public Long getId() {
         return id;
@@ -51,14 +69,6 @@ public class Message {
         this.content = content;
     }
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
     public Room getRoom() {
         return room;
     }
@@ -68,9 +78,11 @@ public class Message {
         this.room = room;
     }
 
-    public Message(String sender, String content) {
-        this.sender = sender;
-        this.content = content;
-        this.timeStamp = LocalDateTime.now();
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

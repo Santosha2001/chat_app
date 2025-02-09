@@ -22,7 +22,8 @@ public class MessageServiceImpl implements MessageService {
         if (room == null) {
             throw new RuntimeException("Room not found!");
         }
-        Message message = new Message(request.getSender(), request.getContent());
+        Message message = new Message(request.getSender(), request.getContent(), room);
+        message.setTimeStamp(LocalDateTime.now()); // Set the current timestamp
         room.getMessages().add(message);
         roomRepository.save(room);
         return message;

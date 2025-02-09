@@ -1,5 +1,6 @@
 package com.chat.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +12,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "rooms")
-@AllArgsConstructor
-@NoArgsConstructor
-//@Getter
-//@Setter
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +19,17 @@ public class Room {
 
     private String roomId;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Message> messages = new ArrayList<>();
+
+    public Room(){}
+
+    public Room(Long id, String roomId, List<Message> messages) {
+        this.id = id;
+        this.roomId = roomId;
+        this.messages = messages;
+    }
 
     public Long getId() {
         return id;
