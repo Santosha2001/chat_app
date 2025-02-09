@@ -70,6 +70,7 @@ const JoinOrCreateChat = () => {
 
                     // Redirect to the chat page
                     navigate('/chat');
+                    toast.success('Room joined successfully');
                 } else {
                     toast.error('Room not found');
                 }

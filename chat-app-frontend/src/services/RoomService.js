@@ -1,4 +1,5 @@
-import { AxiosHelper } from "../config/AxiosHelper";
+import axios from 'axios';
+import { AxiosHelper, BASE_URL } from "../config/AxiosHelper";
 
 // create room
 export const createRoomApi = async (roomDetails) => {
@@ -24,6 +25,17 @@ export const joinRoomApi = async (roomId) => {
         return response.data;
     } catch (error) {
         console.error('Error joining room', error);
+        throw error;
+    }
+};
+
+// get messages
+export const getMessagesApi = async (roomId, size = 50, page = 0) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/api/v1/rooms/${roomId}/messages?size=${size}&page=${page}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting messages', error);
         throw error;
     }
 };
