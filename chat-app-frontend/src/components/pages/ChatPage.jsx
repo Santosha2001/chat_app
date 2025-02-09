@@ -51,9 +51,10 @@ const ChatPage = () => {
     }, [roomId]);
 
     useEffect(() => {
+        let stompClient = null;
         const webSocket = () => {
             const socket = new SockJS(`${BASE_URL}/chat`);
-            const stompClient = Stomp.over(socket);
+            stompClient = Stomp.over(socket);
             stompClient.connect({}, () => {
                 console.log('Connected to the server');
                 setStompClient(stompClient);
@@ -65,6 +66,14 @@ const ChatPage = () => {
             });
         };
         webSocket();
+
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect(() => {
+                    console.log('Disconnected from the server');
+                });
+            }
+        };
     }, [roomId]);
 
     const sendMessage = () => {
@@ -77,7 +86,6 @@ const ChatPage = () => {
                 timeStamp: new Date().toISOString() // Add the current timestamp
             };
             stompClient.send(`/app/sendMessage/${roomId}`, {}, JSON.stringify(message));
-            setMessages((prev) => Array.isArray(prev) ? [...prev, message] : [message]); // Ensure prev is an array
             setInput('');
         }
     };
