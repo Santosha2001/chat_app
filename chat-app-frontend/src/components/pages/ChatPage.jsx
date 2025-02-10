@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import { getMessagesApi } from '../../services/RoomService';
 
 const ChatPage = () => {
-    const { roomId, currentUser, connected, logout } = useChatContext();
+    const { roomId, currentUser, connected, setConnected, logout } = useChatContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,6 +52,7 @@ const ChatPage = () => {
 
     useEffect(() => {
         let stompClient = null;
+
         const webSocket = () => {
             const socket = new SockJS(`${BASE_URL}/chat`);
             stompClient = Stomp.over(socket);
@@ -65,6 +66,7 @@ const ChatPage = () => {
                 });
             });
         };
+
         webSocket();
 
         return () => {
@@ -75,6 +77,15 @@ const ChatPage = () => {
             }
         };
     }, [roomId]);
+
+    useEffect(() => {
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollTo({
+                top: chatBoxRef.current.scrollHeight,
+                behavior: 'smooth',
+            });
+        }
+    }, [messages]);
 
     const sendMessage = () => {
         if (stompClient && connected && input.trim()) {
@@ -87,12 +98,21 @@ const ChatPage = () => {
             };
             stompClient.send(`/app/sendMessage/${roomId}`, {}, JSON.stringify(message));
             setInput('');
+            // Scroll to the bottom after sending a message
+            if (chatBoxRef.current) {
+                chatBoxRef.current.scrollTo({
+                    top: chatBoxRef.current.scrollHeight,
+                    behavior: 'smooth',
+                });
+            }
         }
     };
 
     const handleLeaveRoom = () => {
         logout(); // Call the logout function from the context
+        setConnected(false); // Set connected to false
         navigate('/');
+        window.history.replaceState(null, null, '/'); // Clear browser history
         toast.success('You have left the room');
     };
 
