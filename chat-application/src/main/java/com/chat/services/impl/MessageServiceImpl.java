@@ -22,7 +22,7 @@ public class MessageServiceImpl implements MessageService {
         if (room == null) {
             throw new RuntimeException("Room not found!");
         }
-        Message message = new Message(request.getSender(), request.getContent(), room);
+        Message message = new Message(request.getSender(), request.getContent(), room, request.getFileName(), request.getFileData());
         message.setTimeStamp(LocalDateTime.now()); // Set the current timestamp
         room.getMessages().add(message);
         roomRepository.save(room);

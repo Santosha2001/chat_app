@@ -24,6 +24,12 @@ public class Message {
     @JsonIgnore
     private Room room; // Bidirectional relationship
 
+
+    private String fileName;
+
+    @Lob
+    private byte[] fileData;
+
     public Message() {
     }
 
@@ -33,12 +39,12 @@ public class Message {
         this.room = room;
     }
 
-    public Message(Long id, String sender, String content, LocalDateTime timeStamp, Room room) {
-        this.id = id;
+    public Message(String sender, String content, Room room, String fileName, byte[] fileData) {
         this.sender = sender;
         this.content = content;
-        this.timeStamp = timeStamp;
         this.room = room;
+        this.fileName = fileName;
+        this.fileData = fileData;
     }
 
     public Long getId() {
@@ -80,5 +86,21 @@ public class Message {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+    
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public byte[] getFileData() {
+        return fileData;
+    }
+
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
     }
 }
